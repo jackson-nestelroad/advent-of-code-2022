@@ -67,6 +67,12 @@ impl<'a> Iterator for NewlineBlocksIterator<'a> {
     fn next(&mut self) -> Option<Self::Item> {
         if self.next_index >= self.bytes.len() {
             None
+        } else if self.newlines == 0 {
+            let next_byte = unsafe {
+                str::from_utf8_unchecked(&self.bytes[self.next_index..self.next_index + 1])
+            };
+            self.next_index += 1;
+            Some(next_byte)
         } else {
             unsafe {
                 while let Some(index) = self.find_next_newline() {
