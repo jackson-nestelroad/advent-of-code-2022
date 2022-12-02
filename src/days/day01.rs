@@ -1,4 +1,5 @@
 use crate::common::{AocResult, IntoAocResult, MultipleLines};
+use itertools::Itertools;
 
 fn read_groups(input: &str) -> AocResult<Vec<Vec<i64>>> {
     input
@@ -22,10 +23,10 @@ pub fn solve_a(input: &str) -> AocResult<i64> {
 }
 
 pub fn solve_b(input: &str) -> AocResult<i64> {
-    let mut groups = read_groups(input)?
+    Ok(read_groups(input)?
         .into_iter()
-        .map(|group| group.into_iter().sum())
-        .collect::<Vec<i64>>();
-    groups.sort_by(|a, b| b.cmp(a));
-    Ok(groups[0..3].into_iter().sum())
+        .map(|group| group.into_iter().sum::<i64>())
+        .sorted_by(|a, b| b.cmp(a))
+        .take(3)
+        .sum())
 }
