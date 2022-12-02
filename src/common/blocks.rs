@@ -74,19 +74,17 @@ impl<'a> Iterator for NewlineBlocksIterator<'a> {
             self.next_index += 1;
             Some(next_byte)
         } else {
-            unsafe {
-                while let Some(index) = self.find_next_newline() {
-                    if self.try_finish_group() {
-                        let result = &self.bytes[self.next_group_begin_index..index];
-                        self.next_group_begin_index = self.next_index;
-                        return Some(str::from_utf8_unchecked(result));
-                    }
+            while let Some(index) = self.find_next_newline() {
+                if self.try_finish_group() {
+                    let result = &self.bytes[self.next_group_begin_index..index];
+                    self.next_group_begin_index = self.next_index;
+                    return unsafe { Some(str::from_utf8_unchecked(result)) };
                 }
-                let last_group =
-                    str::from_utf8_unchecked(&self.bytes[self.next_group_begin_index..]);
-                self.next_index = self.bytes.len();
-                Some(last_group)
             }
+            let last_group =
+                unsafe { str::from_utf8_unchecked(&self.bytes[self.next_group_begin_index..]) };
+            self.next_index = self.bytes.len();
+            Some(last_group)
         }
     }
 }
