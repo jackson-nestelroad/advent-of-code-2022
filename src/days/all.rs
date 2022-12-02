@@ -22,16 +22,16 @@ fn get_solver(args: &ProgramArgs) -> AocResult<SolverFn> {
 }
 
 pub struct Solution {
-    solution: i64,
+    solution: u64,
     time: Duration,
 }
 
 impl Solution {
-    pub fn new(solution: i64, time: Duration) -> Self {
+    pub fn new(solution: u64, time: Duration) -> Self {
         Solution { solution, time }
     }
 
-    pub fn solution(&self) -> i64 {
+    pub fn solution(&self) -> u64 {
         self.solution
     }
 
