@@ -46,35 +46,38 @@ impl Hand {
         }
     }
 
-    pub fn beats(&self, other: &Self) -> Outcome {
-        use Hand::*;
-        use Outcome::*;
-        match (self, other) {
-            (Rock, Rock) => Draw,
-            (Rock, Paper) => Lose,
-            (Rock, Scissors) => Win,
-            (Paper, Rock) => Win,
-            (Paper, Paper) => Draw,
-            (Paper, Scissors) => Lose,
-            (Scissors, Rock) => Lose,
-            (Scissors, Paper) => Win,
-            (Scissors, Scissors) => Draw,
+    pub fn beats(&self) -> Self {
+        match self {
+            Self::Rock => Self::Scissors,
+            Self::Paper => Self::Rock,
+            Self::Scissors => Self::Paper,
+        }
+    }
+
+    pub fn loses_to(&self) -> Self {
+        match self {
+            Self::Rock => Self::Paper,
+            Self::Paper => Self::Scissors,
+            Self::Scissors => Self::Rock,
+        }
+    }
+
+    pub fn outcome_against(&self, other: &Self) -> Outcome {
+        let (self_beats, other_beats) = (self.beats(), other.beats());
+        if self_beats == *other {
+            Outcome::Win
+        } else if other_beats == *self {
+            Outcome::Lose
+        } else {
+            Outcome::Draw
         }
     }
 
     pub fn needed_for_outcome(&self, outcome: &Outcome) -> Self {
-        use Hand::*;
-        use Outcome::*;
-        match (self, outcome) {
-            (Rock, Lose) => Scissors,
-            (Rock, Draw) => Rock,
-            (Rock, Win) => Paper,
-            (Paper, Lose) => Rock,
-            (Paper, Draw) => Paper,
-            (Paper, Win) => Scissors,
-            (Scissors, Lose) => Paper,
-            (Scissors, Draw) => Scissors,
-            (Scissors, Win) => Rock,
+        match outcome {
+            Outcome::Lose => self.beats(),
+            Outcome::Draw => *self,
+            Outcome::Win => self.loses_to(),
         }
     }
 }
@@ -105,7 +108,7 @@ impl Scored for Outcome {
 
 impl Scored for (Hand, Hand) {
     fn score(&self) -> u64 {
-        self.1.score() + self.1.beats(&self.0).score()
+        self.1.score() + self.1.outcome_against(&self.0).score()
     }
 }
 
