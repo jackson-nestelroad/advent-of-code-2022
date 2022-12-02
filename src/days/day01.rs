@@ -1,9 +1,9 @@
-use crate::common::{AocResult, IntoAocResult, MultipleLines};
+use crate::common::{AocResult, IntoAocResult, NewlineBlocks};
 use itertools::Itertools;
 
 fn read_groups(input: &str) -> AocResult<Vec<Vec<i64>>> {
     input
-        .multiple_lines(2)
+        .newline_blocks(2)
         .map(|lines| {
             lines
                 .lines()

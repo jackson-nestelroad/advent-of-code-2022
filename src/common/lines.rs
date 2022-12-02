@@ -1,13 +1,13 @@
 use std::str;
 
-pub struct MultipleLinesGroup<'a> {
+pub struct NewlineBlocksIterator<'a> {
     newlines: u32,
     next_group_begin_index: usize,
     next_index: usize,
     bytes: &'a [u8],
 }
 
-impl<'a> MultipleLinesGroup<'a> {
+impl<'a> NewlineBlocksIterator<'a> {
     fn new(input: &'a str, newlines: u32) -> Self {
         Self {
             newlines,
@@ -18,7 +18,7 @@ impl<'a> MultipleLinesGroup<'a> {
     }
 }
 
-impl<'a> MultipleLinesGroup<'a> {
+impl<'a> NewlineBlocksIterator<'a> {
     fn find_next_newline(&mut self) -> Option<usize> {
         for i in self.next_index..self.bytes.len() {
             if self.bytes[i] == b'\n' {
@@ -61,7 +61,7 @@ impl<'a> MultipleLinesGroup<'a> {
     }
 }
 
-impl<'a> Iterator for MultipleLinesGroup<'a> {
+impl<'a> Iterator for NewlineBlocksIterator<'a> {
     type Item = &'a str;
 
     fn next(&mut self) -> Option<Self::Item> {
@@ -85,12 +85,12 @@ impl<'a> Iterator for MultipleLinesGroup<'a> {
     }
 }
 
-pub trait MultipleLines {
-    fn multiple_lines<'a>(&'a self, newlines: u32) -> MultipleLinesGroup<'a>;
+pub trait NewlineBlocks {
+    fn newline_blocks<'a>(&'a self, newlines: u32) -> NewlineBlocksIterator<'a>;
 }
 
-impl MultipleLines for &str {
-    fn multiple_lines<'a>(&'a self, newlines: u32) -> MultipleLinesGroup<'a> {
-        MultipleLinesGroup::new(self, newlines)
+impl NewlineBlocks for &str {
+    fn newline_blocks<'a>(&'a self, newlines: u32) -> NewlineBlocksIterator<'a> {
+        NewlineBlocksIterator::new(self, newlines)
     }
 }
