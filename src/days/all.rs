@@ -8,9 +8,10 @@ use std::{
     time::{Duration, Instant},
 };
 
-const SOLVERS: [[SolverFn; 2]; 2] = [
+const SOLVERS: [[SolverFn; 2]; 3] = [
     [day01::solve_a, day01::solve_b],
     [day02::solve_a, day02::solve_b],
+    [day03::solve_a, day03::solve_b],
 ];
 
 fn get_solver(args: &ProgramArgs) -> AocResult<SolverFn> {
