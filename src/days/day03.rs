@@ -55,9 +55,9 @@ pub fn solve_b(input: &str) -> AocResult<u64> {
         .into_iter()
         .map(|(a, b, c)| {
             let common = multi_intersection([
-                a.bytes().collect::<HashSet<u8>>(),
-                b.bytes().collect::<HashSet<u8>>(),
-                c.bytes().collect::<HashSet<u8>>(),
+                a.bytes().collect(),
+                b.bytes().collect(),
+                c.bytes().collect(),
             ]);
             match common.len() {
                 1 => Ok(common.into_iter().next().unwrap()),
