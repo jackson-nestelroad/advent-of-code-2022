@@ -1,5 +1,5 @@
-#[macro_use]
-extern crate lazy_static;
+// #[macro_use]
+// extern crate lazy_static;
 
 mod common;
 mod days;
@@ -32,7 +32,7 @@ fn main() {
     println!("Day {}, Part {}", args.day(), args.part());
     println!(
         "Solution: {} ({} us)",
-        solution.solution(),
-        solution.time().as_micros()
+        solution.solution,
+        solution.time.as_micros()
     );
 }

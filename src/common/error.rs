@@ -22,7 +22,7 @@ pub type AocResult<T> = Result<T, AocError>;
 
 pub trait IntoAocResult<T> {
     fn into_aoc_result(self) -> AocResult<T>;
-    fn into_aoc_result_msg(self, message: &str) -> Result<T, AocError>;
+    fn into_aoc_result_msg(self, message: &str) -> AocResult<T>;
 }
 
 impl<T, E: ToString> IntoAocResult<T> for Result<T, E> {

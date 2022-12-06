@@ -4,4 +4,4 @@ mod solver;
 
 pub use blocks::{NewlineBlocks, NewlineBlocksIterator};
 pub use error::{AocError, AocResult, IntoAocResult};
-pub use solver::SolverFn;
+pub use solver::{AocSolution, IntSolverFn, Solver, StringSolverFn};
