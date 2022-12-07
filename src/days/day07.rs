@@ -175,7 +175,7 @@ pub fn solve_b(input: &str) -> AocResult<u64> {
     let root = read_directory_tree(input)?;
     let currently_used = root.borrow().size();
     let currently_unused = TOTAL_DISK_SPACE - currently_used;
-    if (currently_unused >= NEEDED_UNUSED_SPACE) {
+    if currently_unused >= NEEDED_UNUSED_SPACE {
         return Err(AocError::new("already have enough unused disk space"));
     }
     let min_to_remove = NEEDED_UNUSED_SPACE - currently_unused;
