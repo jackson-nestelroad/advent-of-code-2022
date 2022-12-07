@@ -5,5 +5,6 @@ mod day03;
 mod day04;
 mod day05;
 mod day06;
+mod day07;
 
 pub use all::{solve, Solution};
