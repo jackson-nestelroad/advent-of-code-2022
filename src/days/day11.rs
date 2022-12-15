@@ -19,7 +19,10 @@ struct KeepAway {
 
 impl KeepAway {
     pub fn new(monkeys: Vec<Monkey>) -> Self {
-        let maximum_worry_level = monkeys.iter().map(|m| m.divisible_test).product();
+        let maximum_worry_level = monkeys
+            .iter()
+            .map(|m| m.divisible_test)
+            .fold(1, |acc, n| acc.lcm(&n));
         Self {
             monkeys: monkeys
                 .into_iter()
