@@ -1,4 +1,10 @@
-use std::{cmp::Ordering, collections::VecDeque, slice, str::FromStr};
+use std::{
+    cmp::Ordering,
+    collections::VecDeque,
+    fmt::{Display, Formatter, Result as DisplayResult},
+    slice,
+    str::FromStr,
+};
 
 use crate::common::{AocError, AocResult, IntoAocResult, NewlineBlocks};
 
@@ -26,6 +32,25 @@ impl Ord for Packet {
 impl PartialOrd for Packet {
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
         Some(self.cmp(&other))
+    }
+}
+
+impl Display for Packet {
+    fn fmt(&self, f: &mut Formatter<'_>) -> DisplayResult {
+        match self {
+            Self::Integer(n) => write!(f, "{n}"),
+            Self::List(list) => {
+                write!(f, "[")?;
+                let mut iter = list.iter().peekable();
+                while let Some(packet) = iter.next() {
+                    write!(f, "{}", packet)?;
+                    if iter.peek().is_some() {
+                        write!(f, ",")?;
+                    }
+                }
+                write!(f, "]")
+            }
+        }
     }
 }
 
