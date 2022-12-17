@@ -35,7 +35,7 @@ impl<T, E: ToString> IntoAocResult<T> for Result<T, E> {
 
     fn into_aoc_result_msg(self, message: &str) -> AocResult<T> {
         match self {
-            Err(_) => Err(AocError::new(message)),
+            Err(err) => Err(AocError::new(format!("{}: {}", message, err.to_string()))),
             Ok(res) => Ok(res),
         }
     }
