@@ -1,7 +1,10 @@
-use crate::common::{AocError, AocResult};
+use std::{iter::Sum, ops::Add, str::FromStr};
+
+use crate::common::{AocError, AocResult, IntoAocResult};
+use itertools::{EitherOrBoth, Itertools};
 use num::Integer;
 
-fn parse_snafu(digits: &str) -> AocResult<u64> {
+fn snafu_to_base_10(digits: &str) -> AocResult<u64> {
     let mut final_value = 0;
     for digit in digits.as_bytes() {
         let value = match digit {
@@ -21,21 +24,21 @@ fn parse_snafu(digits: &str) -> AocResult<u64> {
     Ok(final_value as u64)
 }
 
-fn to_snafu(mut num: u64) -> AocResult<String> {
+fn base_10_to_snafu(mut num: u64) -> AocResult<String> {
     let mut digits = Vec::new();
-    let mut i = 0;
+    let mut borrow = 0;
     while num != 0 {
         let (div, rem) = num.div_rem(&5);
         num = div;
-        match digits.get_mut(i) {
-            None => digits.push(rem as i64),
-            Some(digit) => *digit += rem as i64,
-        };
-        if digits[i] > 2 {
-            digits[i] -= 5;
-            digits.push(1);
+        let mut rem = rem as i64;
+        rem += borrow;
+        if rem > 2 {
+            rem -= 5;
+            borrow = 1;
+        } else {
+            borrow = 0;
         }
-        i += 1;
+        digits.push(rem);
     }
     Ok(digits
         .into_iter()
@@ -50,12 +53,103 @@ fn to_snafu(mut num: u64) -> AocResult<String> {
         .collect())
 }
 
+#[derive(Debug)]
+struct Snafu(Vec<i64>);
+
+impl Snafu {
+    fn to_string(&self) -> AocResult<String> {
+        self.0
+            .iter()
+            .rev()
+            .map(|digit| match digit {
+                -2 => Ok('='),
+                -1 => Ok('-'),
+                0 => Ok('0'),
+                1 => Ok('1'),
+                2 => Ok('2'),
+                _ => Err(AocError::new("invalid snafu digit")),
+            })
+            .collect()
+    }
+}
+
+impl FromStr for Snafu {
+    type Err = AocError;
+    fn from_str(s: &str) -> AocResult<Self> {
+        Ok(Snafu(
+            s.bytes()
+                .rev()
+                .map(|b| match b {
+                    b'=' => Ok(-2),
+                    b'-' => Ok(-1),
+                    b'0' => Ok(0),
+                    b'1' => Ok(1),
+                    b'2' => Ok(2),
+                    _ => Err(AocError::new("invalid character in snafu number")),
+                })
+                .collect::<AocResult<_>>()?,
+        ))
+    }
+}
+
+impl From<&str> for Snafu {
+    fn from(s: &str) -> Self {
+        Self::from_str(s).unwrap()
+    }
+}
+
+impl Add for Snafu {
+    type Output = Snafu;
+    fn add(self, rhs: Self) -> Self::Output {
+        let mut result = Vec::new();
+        let mut borrow = 0;
+        for pair in self.0.iter().zip_longest(rhs.0.iter()) {
+            let (a, b) = match pair {
+                EitherOrBoth::Both(&a, &b) => (a, b),
+                EitherOrBoth::Left(&a) => (a, 0),
+                EitherOrBoth::Right(&b) => (0, b),
+            };
+            let mut sum = a + b + borrow;
+
+            if sum > 2 {
+                sum -= 5;
+                borrow = 1;
+            } else if sum < -2 {
+                sum += 5;
+                borrow = -1;
+            } else {
+                borrow = 0;
+            }
+            result.push(sum);
+        }
+        if borrow == 1 {
+            result.push(borrow);
+        }
+        Snafu(result)
+    }
+}
+
+impl Sum for Snafu {
+    fn sum<I: Iterator<Item = Self>>(iter: I) -> Self {
+        let mut sum = "0".into();
+        for item in iter {
+            sum = sum + item;
+        }
+        sum
+    }
+}
+
 pub fn solve_a(input: &str) -> AocResult<String> {
+    // let sum = input
+    //     .lines()
+    //     .map(|line| snafu_to_base_10(line))
+    //     .sum::<AocResult<_>>()?;
+    // base_10_to_snafu(sum)
     let sum = input
         .lines()
-        .map(|line| parse_snafu(line))
-        .sum::<AocResult<_>>()?;
-    to_snafu(sum)
+        .map(|line| Snafu::from_str(line))
+        .sum::<AocResult<Snafu>>()?;
+    sum.to_string()
 }
 
 pub fn solve_b(_: &str) -> AocResult<String> {

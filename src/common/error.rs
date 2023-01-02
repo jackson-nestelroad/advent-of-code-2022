@@ -1,5 +1,6 @@
 use std::fmt::{Display, Formatter, Result as DisplayResult};
 
+#[derive(Debug)]
 pub struct AocError {
     message: String,
 }
