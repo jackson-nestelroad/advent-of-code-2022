@@ -8,7 +8,7 @@ use std::{
     time::{Duration, Instant},
 };
 
-const SOLVERS: [[Solver; 2]; 24] = [
+const SOLVERS: [[Solver; 2]; 25] = [
     [Solver::Int(day01::solve_a), Solver::Int(day01::solve_b)],
     [Solver::Int(day02::solve_a), Solver::Int(day02::solve_b)],
     [Solver::Int(day03::solve_a), Solver::Int(day03::solve_b)],
@@ -33,6 +33,7 @@ const SOLVERS: [[Solver; 2]; 24] = [
     [Solver::Int(day22::solve_a), Solver::Int(day22::solve_b)],
     [Solver::Int(day23::solve_a), Solver::Int(day23::solve_b)],
     [Solver::Int(day24::solve_a), Solver::Int(day24::solve_b)],
+    [Solver::Str(day25::solve_a), Solver::Str(day25::solve_b)],
 ];
 
 fn get_solver(args: &ProgramArgs) -> AocResult<Solver> {
