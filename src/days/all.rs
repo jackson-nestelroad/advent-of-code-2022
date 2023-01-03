@@ -36,7 +36,7 @@ const SOLVERS: [[Solver; 2]; 25] = [
     [Solver::Str(day25::solve_a), Solver::Str(day25::solve_b)],
 ];
 
-fn get_solver(args: &ProgramArgs) -> AocResult<Solver> {
+fn get_solver(args: &ProgramArgs) -> AocResult<&Solver> {
     if args.day() as usize > SOLVERS.len() {
         return Err(AocError::new("day not implemented"));
     }
@@ -44,7 +44,7 @@ fn get_solver(args: &ProgramArgs) -> AocResult<Solver> {
         SolutionPart::A => 0,
         SolutionPart::B => 1,
     };
-    Ok(SOLVERS[(args.day() - 1) as usize][part_index].clone())
+    Ok(&SOLVERS[(args.day() - 1) as usize][part_index])
 }
 
 pub struct Solution {
@@ -58,8 +58,7 @@ impl Solution {
     }
 }
 
-pub fn solve(args: &ProgramArgs) -> AocResult<Solution> {
-    let solver = get_solver(args)?;
+fn run_solver(args: &ProgramArgs, solver: &Solver) -> AocResult<Solution> {
     let filename = match args.filename() {
         None => format!("input/{}.txt", args.day()),
         Some(filename) => format!("input/{}", filename),
@@ -69,4 +68,33 @@ pub fn solve(args: &ProgramArgs) -> AocResult<Solution> {
     let solution = solver.run(&input)?;
     let then = now.elapsed();
     Ok(Solution::new(solution, then))
+}
+
+pub fn solve(args: &ProgramArgs) -> AocResult<Solution> {
+    run_solver(args, get_solver(args)?)
+}
+
+pub fn solve_all() -> AocResult<Duration> {
+    let mut total_time = Duration::new(0, 0);
+    for (day, solvers) in SOLVERS.iter().enumerate() {
+        for (part, solver) in solvers.iter().enumerate() {
+            let part = match part {
+                0 => SolutionPart::A,
+                1 => SolutionPart::B,
+                _ => return Err(AocError::new(&format!("unknown part: {}", part + 1))),
+            };
+            let args = ProgramArgs::new(day as u8 + 1, part, None);
+            match run_solver(&args, solver) {
+                Err(err) => {
+                    return Err(AocError::new(&format!(
+                        "Day {day} Part {part} failed: {err:?}"
+                    )))
+                }
+                Ok(result) => {
+                    total_time += result.time;
+                }
+            }
+        }
+    }
+    Ok(total_time)
 }

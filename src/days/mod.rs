@@ -25,4 +25,4 @@ mod day23;
 mod day24;
 mod day25;
 
-pub use all::{solve, Solution};
+pub use all::{solve, solve_all, Solution};

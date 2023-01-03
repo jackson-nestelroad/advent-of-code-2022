@@ -7,15 +7,21 @@ mod program;
 
 use std::env;
 
-use days::solve;
+use days::{solve, solve_all};
 use program::ProgramArgs;
 
-fn main() {
-    let mut args = env::args();
-    let program_name = match args.next() {
-        None => return eprintln!("args is empty"),
-        Some(name) => name,
-    };
+fn run_all() {
+    match solve_all() {
+        Err(err) => eprintln!("{}", err),
+        Ok(total_time) => println!(
+            "All Days and Parts ran in {} seconds ({} us)",
+            total_time.as_secs_f64(),
+            total_time.as_micros()
+        ),
+    }
+}
+
+fn run_part(program_name: &str, args: &mut impl Iterator<Item = String>) {
     let args = match ProgramArgs::parse_from_args(args) {
         Err(err) => {
             eprintln!("{}", err);
@@ -35,4 +41,16 @@ fn main() {
         solution.solution,
         solution.time.as_micros()
     );
+}
+
+fn main() {
+    let mut args = env::args().peekable();
+    let program_name = match args.next() {
+        None => return eprintln!("args is empty"),
+        Some(name) => name,
+    };
+    match args.peek().and_then(|s| Some(s.as_str())) {
+        Some("all") => run_all(),
+        _ => run_part(&program_name, &mut args),
+    };
 }

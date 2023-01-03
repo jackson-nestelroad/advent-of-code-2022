@@ -1,6 +1,5 @@
 use crate::common::{AocError, AocResult, IntoAocResult};
 use std::{
-    env::Args,
     fmt::{Display, Formatter, Result as DisplayResult},
     str::FromStr,
 };
@@ -60,24 +59,24 @@ impl ProgramArgs {
         &self.filename
     }
 
-    fn get_next_string_optional(args: &mut Args) -> Option<String> {
+    fn get_next_string_optional(args: &mut impl Iterator<Item = String>) -> Option<String> {
         args.next()
     }
 
-    fn get_next_string(args: &mut Args, name: &str) -> AocResult<String> {
+    fn get_next_string(args: &mut impl Iterator<Item = String>, name: &str) -> AocResult<String> {
         match Self::get_next_string_optional(args) {
             None => Err(AocError::new(format!("missing {}", name))),
             Some(parsed) => Ok(parsed),
         }
     }
 
-    fn get_next_integer(args: &mut Args, name: &str) -> AocResult<u8> {
+    fn get_next_integer(args: &mut impl Iterator<Item = String>, name: &str) -> AocResult<u8> {
         Self::get_next_string(args, name)?
             .parse::<u8>()
             .into_aoc_result()
     }
 
-    pub fn parse_from_args(mut args: Args) -> AocResult<Self> {
+    pub fn parse_from_args(mut args: impl Iterator<Item = String>) -> AocResult<Self> {
         let day = Self::get_next_integer(&mut args, "day")?;
         if day <= 0 || day > 31 {
             return Err(AocError::new("day must be between 1 and 31"));

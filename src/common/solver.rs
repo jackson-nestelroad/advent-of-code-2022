@@ -27,7 +27,7 @@ pub enum Solver {
 }
 
 impl Solver {
-    pub fn run(self, input: &str) -> AocResult<AocSolution> {
+    pub fn run(&self, input: &str) -> AocResult<AocSolution> {
         Ok(match self {
             Self::Int(solver) => AocSolution::Int(solver(&input)?),
             Self::Str(solver) => AocSolution::Str(solver(&input)?),
