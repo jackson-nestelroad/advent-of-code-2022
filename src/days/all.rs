@@ -91,6 +91,7 @@ pub fn solve_all() -> AocResult<Duration> {
                     )))
                 }
                 Ok(result) => {
+                    println!("{day} {part}: {}", result.solution);
                     total_time += result.time;
                 }
             }
