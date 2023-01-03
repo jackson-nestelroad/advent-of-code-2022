@@ -5,7 +5,7 @@ This repository features solutions to the 2022 **Advent of Code** hosted on http
 For my fifth year of doing Advent of Code, I chose to implement my solutions using the **Rust** programming language. I used this language in 2021 as well, but I chose to use this language again, as I have not used it much since then and very much enjoy using it.
 
 ## Solutions
-My solutions are primarily written to be readable, maintainable, and reasonably efficient rather than making things as short or quick to implement as possible. My self-imposed goal was for each solution to run in less than one half-second (500 ms) individually. I did very well on this goal, and in fact, only two solutions (19 B and 24 B) consistently run over 100 ms when compiled with optimizations. The total runtime of all of my solutions together is around 0.6 seconds with optimizations applied:
+My solutions are primarily written to be readable, maintainable, and reasonably efficient rather than making things as short or quick to implement as possible. My self-imposed goal was for each solution to run in less than one half-second (500 ms) individually. I did very well on this goal, and in fact, only three solutions (19 B, 23 B, and 24 B) consistently run over 100 ms when compiled with optimizations. The total runtime of all of my solutions together is around 0.6 seconds with optimizations applied:
 
 ```
 $ cargo run --release all
