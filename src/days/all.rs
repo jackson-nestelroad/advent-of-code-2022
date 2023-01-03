@@ -92,7 +92,11 @@ pub fn solve_all() -> AocResult<Duration> {
                     )))
                 }
                 Ok(result) => {
-                    println!("{day} {part}: {}", result.solution);
+                    println!(
+                        "{day} {part}: {} ({} us)",
+                        result.solution,
+                        result.time.as_micros()
+                    );
                     total_time += result.time;
                 }
             }
