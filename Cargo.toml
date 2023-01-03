@@ -11,3 +11,9 @@ num-derive = "0.3"
 num-traits = "0.2"
 regex = "1"
 rustc-hash = "1.1.0"
+
+[profile.dev]
+opt-level = 0
+
+[profile.release]
+opt-level = 3
