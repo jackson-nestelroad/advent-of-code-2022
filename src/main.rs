@@ -14,7 +14,7 @@ fn run_all() {
     match solve_all() {
         Err(err) => eprintln!("{}", err),
         Ok(total_time) => println!(
-            "All Days and Parts ran in {} seconds ({} us)",
+            "All solutions ran in {} seconds ({} us)",
             total_time.as_secs_f64(),
             total_time.as_micros()
         ),
