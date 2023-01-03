@@ -140,10 +140,12 @@ impl Clocked for Crt {
 impl Display for Crt {
     fn fmt(&self, f: &mut Formatter<'_>) -> DisplayResult {
         for i in 0..self.height {
+            if i != 0 {
+                f.write_char('\n')?;
+            }
             for pixel in &self.pixels[(self.width * i)..(self.width * (i + 1))] {
                 f.write_char(if *pixel { '#' } else { '.' })?;
             }
-            f.write_char('\n')?;
         }
         Ok(())
     }
