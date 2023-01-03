@@ -1,6 +1,6 @@
 use std::{iter::Sum, ops::Add, str::FromStr};
 
-use crate::common::{AocError, AocResult, IntoAocResult};
+use crate::common::{AocError, AocResult};
 use itertools::{EitherOrBoth, Itertools};
 use num::Integer;
 
@@ -140,16 +140,23 @@ impl Sum for Snafu {
 }
 
 pub fn solve_a(input: &str) -> AocResult<String> {
-    // let sum = input
-    //     .lines()
-    //     .map(|line| snafu_to_base_10(line))
-    //     .sum::<AocResult<_>>()?;
-    // base_10_to_snafu(sum)
+    let sum = input
+        .lines()
+        .map(|line| snafu_to_base_10(line))
+        .sum::<AocResult<_>>()?;
+    let conversion_result = base_10_to_snafu(sum)?;
     let sum = input
         .lines()
         .map(|line| Snafu::from_str(line))
         .sum::<AocResult<Snafu>>()?;
-    sum.to_string()
+    let direct_result = sum.to_string()?;
+    if conversion_result != direct_result {
+        Err(AocError::new(
+            "result from base-10 conversion and result from direct addition are not equivalent",
+        ))
+    } else {
+        Ok(direct_result)
+    }
 }
 
 pub fn solve_b(_: &str) -> AocResult<String> {
