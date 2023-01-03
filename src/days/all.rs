@@ -83,7 +83,8 @@ pub fn solve_all() -> AocResult<Duration> {
                 1 => SolutionPart::B,
                 _ => return Err(AocError::new(&format!("unknown part: {}", part + 1))),
             };
-            let args = ProgramArgs::new(day as u8 + 1, part, None);
+            let day = day as u8 + 1;
+            let args = ProgramArgs::new(day, part, None);
             match run_solver(&args, solver) {
                 Err(err) => {
                     return Err(AocError::new(&format!(
